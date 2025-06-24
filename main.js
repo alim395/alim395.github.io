@@ -1,6 +1,6 @@
 let assetsLoaded = false;
 let minDelayElapsed = false;
-
+let userInteracted = false;
 
 const loadImage = (url) => new Promise((resolve, reject) => {
   const img = new Image();
@@ -14,18 +14,59 @@ const imagePromises = [
   loadImage('public/images/Bliss21XL_Night.png')
 ];
 
+// Show the prompt when ready
+function showPrompt() {
+  const prompt = document.querySelector('.loader-prompt');
+  if (prompt) prompt.style.display = 'block';
+}
+
+// Hide the loader and play audio
+function hideLoader() {
+  const loader = document.querySelector('.loader-wrapper');
+  if (loader) loader.classList.add('hidden');
+  const siteWrapper = document.querySelector('.site-wrapper');
+  if (siteWrapper) siteWrapper.classList.add('show');
+  const sound = document.getElementById('fadeSound');
+  if (sound) sound.play();
+}
+
+// Called when all conditions are met
+function tryStartExperience() {
+  if (assetsLoaded && minDelayElapsed && userInteracted) {
+    hideLoader();
+  }
+}
+
+// Minimum delay
+setTimeout(() => {
+  minDelayElapsed = true;
+  showPrompt();
+  tryStartExperience();
+}, 3000);
+
+// Asset load handler
 Promise.all(imagePromises)
   .then(() => {
-    // All images loaded successfully
+    assetsLoaded = true;
+    showPrompt();
+    tryStartExperience();
   })
   .catch((err) => {
     console.error('Failed to load image:', err);
-    // You could fall back to a default image or show an error message
+    assetsLoaded = true; // Still allow user to proceed
+    showPrompt();
+    tryStartExperience();
   });
 
+const loaderWrapper = document.querySelector('.loader-wrapper');
+if (loaderWrapper) {
+  loaderWrapper.addEventListener('click', onUserInteract);
+  loaderWrapper.addEventListener('touchstart', onUserInteract, { passive: false });
+}
 
 const siteWrapper = document.querySelector('.site-wrapper');
 const toggleBtn = document.getElementById('toggleImageBtn');
+
 const dayLayer = document.querySelector('.bg-layer.day');
 const nightLayer = document.querySelector('.bg-layer.night');
 
@@ -47,24 +88,27 @@ if (toggleBtn && dayLayer && nightLayer) {
 // Minimum delay
 setTimeout(() => {
   minDelayElapsed = true;
-  if (assetsLoaded) hideLoader();
+  // if (assetsLoaded) hideLoader();
 }, 3000);
 
 // Asset load handler
-window.addEventListener('load', function() {
-  Promise.all(imagePromises).then(() => {
+Promise.all(imagePromises)
+  .then(() => {
     assetsLoaded = true;
-    if (minDelayElapsed) hideLoader();
+    showPrompt();
+    tryStartExperience();
+  })
+  .catch((err) => {
+    console.error('Failed to load image:', err);
+    assetsLoaded = true; // Still allow user to proceed
+    showPrompt();
+    tryStartExperience();
   });
-});
 
-function hideLoader() {
-  const loader = document.querySelector('.loader-wrapper');
-  if (loader) loader.classList.add('hidden');
-  const siteWrapper = document.querySelector('.site-wrapper');
-  if (siteWrapper) siteWrapper.classList.add('show');
-  const sound = document.getElementById('fadeSound');
-  if (sound) sound.play();
+// User interaction handler (click or touch)
+function onUserInteract() {
+  userInteracted = true;
+  tryStartExperience();
 }
 
 // Drag and Drop Code
@@ -83,32 +127,48 @@ document.querySelectorAll('.window, .window.glass, .gadget-container').forEach(w
 document.querySelectorAll('.window, .window.glass, .gadget-container').forEach(win => {
   let startX, startY, initialLeft, initialTop;
 
-  win.addEventListener('mousedown', function(e) {
-    if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+  function startDrag(e) {
+    // Prevent default for touch events to avoid scrolling
+    if (e.type === 'touchstart') {
+      e.preventDefault();
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+    } else {
+      if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+      startX = e.clientX;
+      startY = e.clientY;
+    }
 
-    // Reset all windows to minimum
+    // Reset all windows to minimum z-index
     document.querySelectorAll('.window, .window.glass, .gadget-container').forEach(w => {
       w.style.zIndex = MIN_WINDOW_ZINDEX;
     });
     // Bring this window to the top
     win.style.zIndex = TOP_WINDOW_ZINDEX;
 
-    e.preventDefault();
-    startX = e.clientX;
-    startY = e.clientY;
     initialLeft = win.offsetLeft;
     initialTop = win.offsetTop;
     isDragging = false;
 
-    function onMouseMove(e) {
-      const dx = Math.abs(e.clientX - startX);
-      const dy = Math.abs(e.clientY - startY);
+    function onMove(e) {
+      let clientX, clientY;
+      if (e.type === 'touchmove') {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+
+      const dx = Math.abs(clientX - startX);
+      const dy = Math.abs(clientY - startY);
       if (dx > DRAG_THRESHOLD || dy > DRAG_THRESHOLD) {
         isDragging = true;
       }
 
-      let newLeft = initialLeft + (e.clientX - startX);
-      let newTop = initialTop + (e.clientY - startY);
+      let newLeft = initialLeft + (clientX - startX);
+      let newTop = initialTop + (clientY - startY);
 
       // Clamp to desktop boundaries
       const desktop = document.querySelector('.site-wrapper') || document.body;
@@ -122,21 +182,27 @@ document.querySelectorAll('.window, .window.glass, .gadget-container').forEach(w
       win.style.top = newTop + 'px';
     }
 
-    function onMouseUp() {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      // Reset isDragging after a short delay to avoid race conditions
+    function onEnd() {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onEnd);
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('touchend', onEnd);
+
       setTimeout(() => { isDragging = false; }, 10);
     }
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onEnd);
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd);
+  }
+
+  win.addEventListener('mousedown', startDrag);
+  win.addEventListener('touchstart', startDrag, { passive: false });
 });
 
 // --- NEW: Active/Inactive Window State for Windows 7 ---
 
-let activeWindow = null;
 const windows = document.querySelectorAll('.win7 .window.glass');
 
 function setActiveWindow(windowElement) {
@@ -150,13 +216,14 @@ function setActiveWindow(windowElement) {
 }
 
 windows.forEach(windowEl => {
-  windowEl.addEventListener('mousedown', (e) => {
+  function activateOnInteraction(e) {
+    if (e.type === 'touchstart') e.preventDefault();
     setActiveWindow(windowEl);
-    // ... your existing drag code will handle the rest
-  });
+  }
+  windowEl.addEventListener('mousedown', activateOnInteraction);
+  windowEl.addEventListener('touchstart', activateOnInteraction, { passive: false });
 });
 
-// Optionally, set the first window as active by default
 if (windows.length > 0) {
   setActiveWindow(windows[0]);
 }
@@ -253,4 +320,43 @@ setInterval(() => {
   initWeatherGadget(); // Or call updateTemperature with current lat/lng
 }, 300000);
 
+// Loading Animation
+const frames = document.querySelectorAll('.vista-loader .frame');
+const frameCount = frames.length;
+let currentFrame = 0;
+let isForward = true;
+let holdCount = 0;
+const holdFrames = 3; // Number of intervals to "hold" at frame 3 or 1
 
+function cycleFrames() {
+  // Remove active class from all frames
+  frames.forEach(frame => frame.classList.remove('active'));
+
+  // Set the current frame as active
+  frames[currentFrame].classList.add('active');
+
+  // If at the end or start, decide whether to hold or reverse
+  if (isForward && currentFrame === frameCount - 1) {
+    // At last frame, start holding (or reverse if hold is over)
+    if (holdCount < holdFrames) {
+      holdCount++;
+    } else {
+      holdCount = 0;
+      isForward = false;
+    }
+  } else if (!isForward && currentFrame === 0) {
+    // At first frame, start holding (or reverse if hold is over)
+    if (holdCount < holdFrames) {
+      holdCount++;
+    } else {
+      holdCount = 0;
+      isForward = true;
+    }
+  } else {
+    // Move to next frame in current direction
+    currentFrame += isForward ? 1 : -1;
+  }
+}
+
+// Start animation (e.g., every 400ms for a gentle cycle)
+setInterval(cycleFrames, 400); // Adjust timing to match your desired speed
