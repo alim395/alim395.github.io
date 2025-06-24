@@ -134,6 +134,33 @@ document.querySelectorAll('.window, .window.glass, .gadget-container').forEach(w
   });
 });
 
+// --- NEW: Active/Inactive Window State for Windows 7 ---
+
+let activeWindow = null;
+const windows = document.querySelectorAll('.win7 .window.glass');
+
+function setActiveWindow(windowElement) {
+  windows.forEach(win => {
+    win.classList.add('unactive');
+    win.classList.remove('active');
+  });
+  windowElement.classList.remove('unactive');
+  windowElement.classList.add('active');
+  activeWindow = windowElement;
+}
+
+windows.forEach(windowEl => {
+  windowEl.addEventListener('mousedown', (e) => {
+    setActiveWindow(windowEl);
+    // ... your existing drag code will handle the rest
+  });
+});
+
+// Optionally, set the first window as active by default
+if (windows.length > 0) {
+  setActiveWindow(windows[0]);
+}
+
 // Weather Gadget Code
 
 // Toggle flip on click (and background)
