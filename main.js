@@ -309,7 +309,7 @@ function initWeatherGadget() {
 }
 
 // Initialize and update time every second
-initWeatherGadget();
+///initWeatherGadget();
 setInterval(() => {
   updateTime();
 }, 1000);
