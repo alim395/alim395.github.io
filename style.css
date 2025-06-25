@@ -75,18 +75,17 @@
   gap: 2rem;
 }
 
-/* Vista loader with 3x scaling */
 .vista-loader {
-  width: 162px;
-  height: 162px;
+  width: 216px;
+  height: 216px;
   position: relative;
 }
 .vista-loader .frame {
   position: absolute;
   top: 0;
   left: 0;
-  width: 162px;
-  height: 162px;
+  width: 216px;
+  height: 216px;
   opacity: 0;
   transition: opacity 0.4s ease-in-out;
   object-fit: contain;
