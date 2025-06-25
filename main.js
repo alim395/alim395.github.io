@@ -317,7 +317,7 @@ setInterval(() => {
 // Update Weather every 5 minutes
 // Example: Update weather every 5 minutes (300,000 ms)
 setInterval(() => {
-  initWeatherGadget(); // Or call updateTemperature with current lat/lng
+  //initWeatherGadget(); // Or call updateTemperature with current lat/lng
 }, 300000);
 
 // Loading Animation
