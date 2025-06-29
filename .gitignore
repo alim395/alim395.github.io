@@ -1,2 +1,8 @@
 # Editor-specific files
 .vscode/
+
+# Testing Scripts
+*.py
+*.html.txt
+*.js.txt
+*.css.txt
