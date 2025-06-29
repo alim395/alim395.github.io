@@ -22,17 +22,18 @@
           <img src="public/images/loading/L2.png" class="frame" alt="Frame 2">
           <img src="public/images/loading/L3.png" class="frame" alt="Frame 3">
         </div>
-        <div class="loader-prompt">
+        <div class="loader-prompt" style="display:none;">
           <p>Click or touch anywhere to start</p>
         </div>
       </div>
     </div>
     <!-- Main site content and background (fades in) -->
     <div class="site-wrapper">
+      <div class="desktop-icons"></div>
       <div class="bg-layer day"></div>
       <div class="bg-layer night"></div>
       <!-- Windows XP Window -->
-      <div class="window" id="winXP" style="width: 250px; top: 100px; left: 100px;">
+      <div class="window" id="winXP" style="width: 250px; top: 200px; left: 200px;">
         <div class="title-bar">
           <div class="title-bar-text">My Window</div>
           <div class="title-bar-controls">
@@ -52,7 +53,7 @@
       <!-- Windows 7 Window -->
       <div class="win7">
         <div class="background">
-          <div class="window glass active" style="max-width: 100%; top: 200px; left: 200px;">
+          <div class="window glass active" style="max-width: 100%; top: 300px; left: 300px;">
             <div class="title-bar">
               <div class="title-bar-text">A glass window frame</div>
               <div class="title-bar-controls">
@@ -71,8 +72,9 @@
         </div>
       </div>
       <!-- Weather Gadget -->
-       <!-- <div class="gadget-container" data-flip="true">
+      <div class="gadget-container weather" data-flip="true" style="display:none;">
         <div class="gadget-flip">
+          <button class="gadget-close" aria-label="Close Weather Gadget">✖</button>
           <div class="gadget-face gadget-front">
             <div class="weather-info">
               <div class="time">12:00</div>
@@ -95,8 +97,8 @@
             <div class="flip-icon">🔄</div>
           </div>
         </div>
-      </div> -->
+      </div>
   </div>
   </body>
-  <script src="main.js"></script>
+  <script type="module" src="js/main.js"></script>
 </html>
