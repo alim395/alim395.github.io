@@ -292,3 +292,87 @@
 .gadget-flip .gadget-close:hover {
   background: rgba(0,0,0,0.4);
 }
+.gadget-container.puzzle {
+  width: 220px;
+  height: 280px;
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background: #222;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0006;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.puzzle-header {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+  padding-right: 2px;
+  position: static; /* Not absolute! */
+  background: linear-gradient(to bottom, #333 80%, #222 100%);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.puzzle-header .gadget-close {
+  position: static;
+  margin: 0 0 0 0;
+  top: auto;
+  right: auto;
+}
+.puzzle-gadget {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  box-sizing: border-box;
+  padding: 10px 10px 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding-top: 0;
+}
+.puzzle-gadget > div[style] {
+  margin-bottom: 6px;
+}
+.puzzle-board {
+  display: grid;
+  grid-template-columns: repeat(4, 48px);
+  grid-template-rows: repeat(4, 48px);
+  gap: 2px;
+  margin: 0 auto 16px auto;
+  justify-content: center;
+  margin-top: 0;
+}
+.puzzle-shuffle {
+  margin: 0 auto 8px auto;
+  display: block;
+}
+.puzzle-status {
+  color: #fff;
+  font-size: 0.95em;
+  margin-top: 4px;
+  text-align: center;
+}
+.gadget-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  background: rgba(0,0,0,0.2);
+  border: none;
+  color: #fff;
+  font-size: 1.2em;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.gadget-close:hover {
+  background: rgba(0,0,0,0.4);
+}
