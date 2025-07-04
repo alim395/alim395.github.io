@@ -1,4 +1,6 @@
-/* HTML: <div class="loader"></div> */
+/* =========================
+   Loader Styles
+   ========================= */
 .loader {
   --s: 25px;
   --g: 5px;  
@@ -44,22 +46,10 @@
   transition: opacity 0.8s ease-out;
 }
 @keyframes hide {
-  0%{
-    opacity: 1;
-    display: block;
-  }
-  39%{
-    opacity: 1;
-    display: block;
-  }
-  40%{
-    opacity: 1;
-    display: none;
-  }
-  100%{
-    opacity: 0;
-    display: none;
-  }
+  0%{ opacity: 1; display: block; }
+  39%{ opacity: 1; display: block; }
+  40%{ opacity: 1; display: none; }
+  100%{ opacity: 0; display: none; }
 }
 
 .loader-wrapper.hidden {
@@ -67,7 +57,6 @@
   pointer-events: none;
 }
 
-/* New loader-content and prompt layout */
 .loader-content {
   display: flex;
   flex-direction: column;
@@ -94,7 +83,6 @@
   opacity: 1;
 }
 
-/* Prompt under the loader */
 .loader-prompt {
   color: white;
   text-align: center;
@@ -102,6 +90,9 @@
   display: none;
 }
 
+/* =========================
+   Site Wrapper & Background
+   ========================= */
 .site-wrapper {
   position: absolute;
   top: 0;
@@ -138,6 +129,9 @@
   z-index: 2;
 }
 
+/* =========================
+   Window Styles
+   ========================= */
 .window {
   position: absolute;
   z-index: 10;
@@ -149,13 +143,53 @@
   pointer-events: none;
 }
 
-/* Gadget CSS */
+/* =========================
+   Desktop Icons
+   ========================= */
+.desktop-icons {
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  z-index: 4;
+}
+.desktop-icon {
+  width: 72px;
+  height: 72px;
+  margin: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: absolute;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  border-radius: 8px;
+  transition: box-shadow 0.15s, background 0.15s;
+}
+.desktop-icon:active, .desktop-icon.selected {
+  background: rgba(0, 120, 215, 0.18);
+  box-shadow: 0 0 0 2px rgba(0,120,215,0.4);
+}
+.desktop-icon img {
+  width: 48px;
+  height: 48px;
+}
+.desktop-icon span {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: #fff;
+  text-shadow: 1px 1px 2px #000;
+  text-align: center;
+}
+
+/* =========================
+   Gadget Containers & Flip
+   ========================= */
 .gadget-container {
   display: none;
   z-index: 10;
 }
 .gadget-container.weather {
-  /* Weather gadget specific styles */
   width: 350px;
   height: 104px;
   top: 20px;
@@ -215,6 +249,10 @@
   padding: 4px;
   pointer-events: none;
 }
+
+/* =========================
+   Weather Gadget
+   ========================= */
 .weather-info {
   color: white;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
@@ -239,59 +277,9 @@
   font-weight: normal;
 }
 
-.desktop-icons {
-  position: absolute;
-  top: 0; left: 0; bottom: 0; right: 0;
-  z-index: 4;
-}
-.desktop-icon {
-  width: 72px;
-  height: 72px;
-  margin: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  position: absolute;
-  cursor: pointer;
-  pointer-events: auto;
-  user-select: none;
-  border-radius: 8px;
-  transition: box-shadow 0.15s, background 0.15s;
-}
-.desktop-icon:active, .desktop-icon.selected {
-  background: rgba(0, 120, 215, 0.18); /* Windows 10 selection blue, transparent */
-  box-shadow: 0 0 0 2px rgba(0,120,215,0.4);
-}
-.desktop-icon img {
-  width: 48px;
-  height: 48px;
-}
-.desktop-icon span {
-  margin-top: 4px;
-  font-size: 0.9rem;
-  color: #fff;
-  text-shadow: 1px 1px 2px #000;
-  text-align: center;
-}
-.gadget-flip .gadget-close {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 2;
-  background: rgba(0,0,0,0.2);
-  border: none;
-  color: #fff;
-  font-size: 1.2em;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.gadget-flip .gadget-close:hover {
-  background: rgba(0,0,0,0.4);
-}
+/* =========================
+   Puzzle Gadget
+   ========================= */
 .gadget-container.puzzle {
   width: 220px;
   height: 280px;
@@ -314,7 +302,7 @@
   justify-content: flex-end;
   margin-bottom: 8px;
   padding-right: 2px;
-  position: static; /* Not absolute! */
+  position: static;
   background: linear-gradient(to bottom, #333 80%, #222 100%);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -358,21 +346,59 @@
   margin-top: 4px;
   text-align: center;
 }
-.gadget-close {
+
+/* =========================
+   Gadget Close Button
+   ========================= */
+.gadget-close,
+.gadget-flip .gadget-close,
+.puzzle-header .gadget-close {
+  background: url('public/images/Other/close.png') center center no-repeat;
+  background-size: 46px 29px;
+  border: none;
+  color: transparent;
+  font-size: 0;
+  width: 46px;
+  height: 29px;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 0.2s;
+  outline: none;
+  padding: 0;
+  box-sizing: content-box;
+}
+/* Weather gadget: small, absolutely positioned close button */
+.gadget-flip .gadget-close {
   position: absolute;
   top: 8px;
   right: 8px;
   z-index: 2;
-  background: rgba(0,0,0,0.2);
-  border: none;
-  color: #fff;
-  font-size: 1.2em;
+  background: url('public/images/Other/close.png') center center no-repeat;
+  background-size: 46px 29px;
+  background-color: transparent;
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  transition: background 0.2s;
+  width: 46px;
+  height: 29px;
 }
-.gadget-close:hover {
+.gadget-flip .gadget-close:hover,
+.gadget-flip .gadget-close:focus {
   background: rgba(0,0,0,0.4);
+  background-image: url('public/images/Other/close_hover.png');
+  background-size: 46px 29px;
+  background-color: transparent;
+}
+.gadget-close:hover,
+.gadget-close:focus,
+.gadget-flip .gadget-close:hover,
+.puzzle-header .gadget-close:hover {
+  background-image: url('public/images/Other/close_hover.png');
+  background-size: 46px 29px;
+  background-color: transparent;
+}
+.gadget-close:focus-visible,
+.gadget-flip .gadget-close:focus-visible,
+.puzzle-header .gadget-close:focus-visible {
+  outline: 2px solid #3399ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #3399ff55;
 }
