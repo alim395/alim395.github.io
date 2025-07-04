@@ -6,3 +6,7 @@
 *.html.txt
 *.js.txt
 *.css.txt
+
+# Reference Materials
+*.md
+!README.md
