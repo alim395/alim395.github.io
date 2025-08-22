@@ -211,9 +211,14 @@ function openGadgetsFolder(gadgetsNode) {
   document.body.appendChild(gadgetsWin);
   
   // Close button handler
-  gadgetsWin.querySelector('.folder-close').onclick = () => {
+  const gadgetsCloseButton = gadgetsWin.querySelector('.folder-close');
+  gadgetsCloseButton.onclick = () => {
     gadgetsWin.style.display = 'none';
   };
+  gadgetsCloseButton.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    gadgetsWin.style.display = 'none';
+  }, { passive: false });
   
   // Add click handlers for gadget icons
   gadgetsWin.querySelectorAll('.gadget-icon').forEach(iconEl => {
@@ -270,7 +275,6 @@ function openGadgetsFolder(gadgetsNode) {
     
     iconEl.addEventListener('dblclick', openGadget);
     iconEl.addEventListener('touchend', function(e) {
-      if (e.touches && e.touches.length > 0) return;
       e.preventDefault();
       openGadget();
     }, { passive: false });

@@ -21,7 +21,6 @@ export function setupGadgetFlip() {
   document.querySelector('.site-wrapper').addEventListener('click', handleFlip);
   document.querySelector('.site-wrapper').addEventListener('touchend', function(e) {
     // Only trigger on direct tap, not drag
-    if (e.touches && e.touches.length > 0) return;
     handleFlip(e);
   }, { passive: false });
 }

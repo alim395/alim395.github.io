@@ -40,7 +40,6 @@ function createDesktopIcon(iconData, onWeatherClick, onPuzzleClick) {
     });
     icon.addEventListener('dblclick', () => openFolderWindow(iconData, onWeatherClick, onPuzzleClick));
     icon.addEventListener('touchend', function(e) {
-      if (e.touches && e.touches.length > 0) return;
       e.preventDefault();
       openFolderWindow(iconData, onWeatherClick, onPuzzleClick);
     }, { passive: false });
@@ -155,7 +154,12 @@ function createDesktopIcon(iconData, onWeatherClick, onPuzzleClick) {
         `;
       }
       document.body.appendChild(appWin);
-      appWin.querySelector('.folder-close').onclick = () => { appWin.style.display = 'none'; };
+      const closeButton = appWin.querySelector('.folder-close');
+      closeButton.onclick = () => { appWin.style.display = 'none'; };
+      closeButton.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        appWin.style.display = 'none';
+      }, { passive: false });
       if (iconData.subtype !== 'notepad') {
         appWin.querySelector('.placeholder-ok').onclick = () => { appWin.style.display = 'none'; };
       }
@@ -163,7 +167,6 @@ function createDesktopIcon(iconData, onWeatherClick, onPuzzleClick) {
     }
     icon.addEventListener('dblclick', openAppWindow);
     icon.addEventListener('touchend', function(e) {
-      if (e.touches && e.touches.length > 0) return;
       e.preventDefault();
       openAppWindow();
     }, { passive: false });
@@ -188,7 +191,6 @@ function createDesktopIcon(iconData, onWeatherClick, onPuzzleClick) {
     
     icon.addEventListener('dblclick', openFileInApp);
     icon.addEventListener('touchend', function(e) {
-      if (e.touches && e.touches.length > 0) return;
       e.preventDefault();
       openFileInApp();
     }, { passive: false });
@@ -290,9 +292,14 @@ function openNotepadWithFile(fileData) {
     updateStatus();
     
     // Close button handler
-    notepadWin.querySelector('.folder-close').onclick = () => {
+    const notepadCloseButton = notepadWin.querySelector('.folder-close');
+    notepadCloseButton.onclick = () => {
       notepadWin.style.display = 'none';
     };
+    notepadCloseButton.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      notepadWin.style.display = 'none';
+    }, { passive: false });
     
     // Setup window dragging
     import('./windows.js').then(mod => { mod.setupWindowDragging(); });
@@ -406,7 +413,12 @@ function openFolderWindow(folderData, onWeatherClick, onPuzzleClick) {
   `;
   document.body.appendChild(folderWin);
   // Close logic
-  folderWin.querySelector('.folder-close').onclick = () => { folderWin.style.display = 'none'; };
+  const folderCloseButton = folderWin.querySelector('.folder-close');
+  folderCloseButton.onclick = () => { folderWin.style.display = 'none'; };
+  folderCloseButton.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    folderWin.style.display = 'none';
+  }, { passive: false });
   // Make draggable
   import('./windows.js').then(mod => { mod.setupWindowDragging(); });
   // Add icon click logic for gadgets and files
@@ -428,7 +440,6 @@ function openFolderWindow(folderData, onWeatherClick, onPuzzleClick) {
           if (openFn) {
             iconEl.addEventListener('dblclick', openFn);
             iconEl.addEventListener('touchend', function(e) {
-              if (e.touches && e.touches.length > 0) return;
               e.preventDefault();
               openFn();
             }, { passive: false });
@@ -437,7 +448,6 @@ function openFolderWindow(folderData, onWeatherClick, onPuzzleClick) {
           // Handle text file opening
           iconEl.addEventListener('dblclick', () => openNotepadWithFile(item));
           iconEl.addEventListener('touchend', function(e) {
-            if (e.touches && e.touches.length > 0) return;
             e.preventDefault();
             openNotepadWithFile(item);
           }, { passive: false });
